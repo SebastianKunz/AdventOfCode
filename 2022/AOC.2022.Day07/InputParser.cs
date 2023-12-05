@@ -32,7 +32,6 @@ public static class InputParser
                     {
                         directory = directory.GetDir(dirName);
                     }
-
                 }
             }
             else if (type == LineType.Dir)
@@ -44,14 +43,14 @@ public static class InputParser
             {
                 int fileSize = int.Parse(split[0]);
                 string name = split[1];
-                
+
                 directory.AddFile(fileSize, name);
             }
         }
 
         return root;
     }
-    
+
     private static CommandType ParseCommandType(string type)
     {
         if (type == "cd")
@@ -70,7 +69,7 @@ public static class InputParser
             return LineType.Dir;
         if (int.TryParse(type, out _))
             return LineType.File;
-        
+
         throw new ArgumentOutOfRangeException(type);
     }
 }

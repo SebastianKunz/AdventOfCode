@@ -11,13 +11,13 @@ public class Game
         GameId = gameId;
     }
 
-    public int GameId { get;}
+    public int GameId { get; }
 
     public int CalculateMinimumPower()
     {
-        var maxBlue = GameSets.Max(x => x.Blue);
-        var maxRed = GameSets.Max(x => x.Red);
-        var maxGreen = GameSets.Max(x => x.Green);
+        int maxBlue = GameSets.Max(x => x.Blue);
+        int maxRed = GameSets.Max(x => x.Red);
+        int maxGreen = GameSets.Max(x => x.Green);
 
         return maxBlue * maxRed * maxGreen;
     }
@@ -27,7 +27,7 @@ public class Game
         var strBuilder = new StringBuilder();
 
         strBuilder.Append($"Game {GameId}: ");
-        foreach (var set in GameSets)
+        foreach (GameSet set in GameSets)
         {
             strBuilder.Append(set);
             strBuilder.Append("; ");
@@ -46,14 +46,14 @@ public class GameSet
         { CubeColor.Red, 0 }
     };
 
+    public int Blue => RevealedCubes[CubeColor.Blue];
+    public int Red => RevealedCubes[CubeColor.Red];
+    public int Green => RevealedCubes[CubeColor.Green];
+
     public void AddToColor(CubeColor color, int count)
     {
         RevealedCubes[color] += count;
     }
-
-    public int Blue => RevealedCubes[CubeColor.Blue];
-    public int Red => RevealedCubes[CubeColor.Red];
-    public int Green => RevealedCubes[CubeColor.Green];
 
     public override string ToString()
     {

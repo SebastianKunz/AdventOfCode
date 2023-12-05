@@ -22,26 +22,22 @@ public class Almanac
 
     public long FindSource(long number, IReadOnlyList<DestinationSourceRange> map)
     {
-        foreach (var range in map)
-        {
+        foreach (DestinationSourceRange range in map)
             if (number >= range.SourceRangeStart && number <= range.SourceRangeStart + range.RangeLength - 1)
-            {
                 return range.DestinationRangeStart + number - range.SourceRangeStart;
-            }
-        }
 
         return number;
     }
 
     public long CalculateLocationFor(long seedNumber)
     {
-        var soilNumber = FindSource(seedNumber, SeedToSoil);
-        var fertilizerNumber = FindSource(soilNumber, SoilToFertilizer);
-        var waterNumber = FindSource(fertilizerNumber, FertilizerToWater);
-        var lightNumber = FindSource(waterNumber, WaterToLight);
-        var tempNumber = FindSource(lightNumber, LightToTemperature);
-        var humidityNumber = FindSource(tempNumber, TemperatureToHumidity);
-        var locationNumber = FindSource(humidityNumber, HumidityToLocation);
+        long soilNumber = FindSource(seedNumber, SeedToSoil);
+        long fertilizerNumber = FindSource(soilNumber, SoilToFertilizer);
+        long waterNumber = FindSource(fertilizerNumber, FertilizerToWater);
+        long lightNumber = FindSource(waterNumber, WaterToLight);
+        long tempNumber = FindSource(lightNumber, LightToTemperature);
+        long humidityNumber = FindSource(tempNumber, TemperatureToHumidity);
+        long locationNumber = FindSource(humidityNumber, HumidityToLocation);
         return locationNumber;
     }
 
@@ -52,7 +48,7 @@ public class Almanac
         for (var index = 0; index < Seeds.Count; index++)
         {
             long seedNumber = Seeds[index];
-            var location = CalculateLocationFor(seedNumber);
+            long location = CalculateLocationFor(seedNumber);
             if (location < min)
                 min = location;
             if (index % (Seeds.Count / 100) == 0)

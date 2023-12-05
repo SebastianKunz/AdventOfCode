@@ -18,20 +18,14 @@ public class Parser
         var mode = "";
         List<long> seedNumbers = new();
         Dictionary<string, List<DestinationSourceRange>> allMaps = new();
-        foreach (string line in lines)
-        {
-            mode = ParseLine(line, seedNumbers, mode, allMaps);
-        }
+        foreach (string line in lines) mode = ParseLine(line, seedNumbers, mode, allMaps);
 
         return new Almanac(seedNumbers, allMaps);
     }
 
     private string ParseLine(string line, List<long> seedNumbers, string mode, Dictionary<string, List<DestinationSourceRange>> allMaps)
     {
-        if (string.IsNullOrEmpty(line))
-        {
-            return mode;
-        }
+        if (string.IsNullOrEmpty(line)) return mode;
 
         if (line.StartsWith("seeds"))
         {
@@ -47,7 +41,7 @@ public class Parser
 
         long[] rangeNumbers = line.Split(" ", StringSplitOptions.TrimEntries).Select(long.Parse).ToArray();
 
-        if (!allMaps.TryGetValue(mode, out var list))
+        if (!allMaps.TryGetValue(mode, out List<DestinationSourceRange>? list))
         {
             list = new List<DestinationSourceRange>();
             allMaps.Add(mode, list);
@@ -59,7 +53,7 @@ public class Parser
 
     private void ParseSeedNumbers(string line, List<long> seedNumbers)
     {
-        var numbers = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+        string[] numbers = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
         long[] theNumbers = numbers.Skip(1).Select(long.Parse).ToArray();
         if (!_parseSeedsAsRange)
         {
@@ -74,9 +68,6 @@ public class Parser
 
     private static void RangeLong(long start, long count, List<long> seedNumbers)
     {
-        for (long i = start; i < start + count; i++)
-        {
-            seedNumbers.Add(i);
-        }
+        for (long i = start; i < start + count; i++) seedNumbers.Add(i);
     }
 }

@@ -4,7 +4,7 @@ using Day04;
 
 var parser = new Parser("input.txt");
 
-var cards = parser.Parse().ToDictionary(x => x.Number);
+Dictionary<int, Card> cards = parser.Parse().ToDictionary(x => x.Number);
 
 foreach (Card card in cards.Values)
 {
@@ -12,10 +12,10 @@ foreach (Card card in cards.Values)
     Console.WriteLine(card);
 }
 
-var result1 = cards.Values.Sum(card => card.CalculateScore());
+int result1 = cards.Values.Sum(card => card.CalculateScore());
 
 
-var totalCopies = cards.Values.Sum(x => x.CopyCount);
+int totalCopies = cards.Values.Sum(x => x.CopyCount);
 Console.WriteLine();
 Console.WriteLine($"Result For Part 1: {result1}");
 Console.WriteLine($"Result For Part 2: {totalCopies}");

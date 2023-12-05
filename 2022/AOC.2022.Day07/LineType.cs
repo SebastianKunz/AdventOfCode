@@ -1,7 +1,7 @@
-﻿
-namespace AdventOfCode;
+﻿namespace AdventOfCode;
 
-public enum LineType {
+public enum LineType
+{
     Command,
     Dir,
     File

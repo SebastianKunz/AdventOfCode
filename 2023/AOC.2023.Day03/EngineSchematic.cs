@@ -29,7 +29,7 @@ public class SchematicSymbol
 
     public bool IsGear => Symbol == '*' && PartNumbers.Count == 2;
 
-    public List<SchematicNumber> PartNumbers { get; } = new List<SchematicNumber>();
+    public List<SchematicNumber> PartNumbers { get; } = new();
 }
 
 public class SchematicNumber
@@ -43,12 +43,6 @@ public class SchematicNumber
         Number = number;
     }
 
-    public bool IsOnX(int x)
-    {
-        return PosXMax >= x - 1 && PosXMax <= x + 1 ||
-               PosXMin >= x - 1 && PosXMin <= x + 1;
-    }
-
     public int Number { get; }
     public int PosY { get; }
 
@@ -57,4 +51,10 @@ public class SchematicNumber
     public int PosXMax { get; }
 
     public bool IsPartNumber { get; set; }
+
+    public bool IsOnX(int x)
+    {
+        return (PosXMax >= x - 1 && PosXMax <= x + 1) ||
+               (PosXMin >= x - 1 && PosXMin <= x + 1);
+    }
 }

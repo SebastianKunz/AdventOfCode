@@ -2,22 +2,22 @@
 
 public class AdventDirectory
 {
-    public AdventDirectory? Parent { get; }
-    private Dictionary<string, AdventFile> Files { get; }
-    
-    public Dictionary<string, AdventDirectory> Dirs { get; }
-
-    public int Size => Dirs.Sum(x => x.Value.Size) + Files.Sum(x => x.Value.Size);
-    
-    public string Name { get; }
-
-    public AdventDirectory(string name, AdventDirectory? parent =null)
+    public AdventDirectory(string name, AdventDirectory? parent = null)
     {
         Name = name;
         Parent = parent;
         Files = new Dictionary<string, AdventFile>();
         Dirs = new Dictionary<string, AdventDirectory>();
     }
+
+    public AdventDirectory? Parent { get; }
+    private Dictionary<string, AdventFile> Files { get; }
+
+    public Dictionary<string, AdventDirectory> Dirs { get; }
+
+    public int Size => Dirs.Sum(x => x.Value.Size) + Files.Sum(x => x.Value.Size);
+
+    public string Name { get; }
 
     public void AddDir(string name)
     {
@@ -33,6 +33,4 @@ public class AdventDirectory
     {
         return Dirs[name];
     }
-    
-    
 }

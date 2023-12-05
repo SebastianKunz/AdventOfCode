@@ -4,7 +4,7 @@ var parser = new Parser("input.txt");
 
 List<Game> games = await parser.Parse();
 
-var answerForPart1 = games.Where(game =>
+int answerForPart1 = games.Where(game =>
 {
     return game.GameSets.All(set => set.RevealedCubes[CubeColor.Red] <= 12 &&
                                     set.RevealedCubes[CubeColor.Green] <= 13 &&

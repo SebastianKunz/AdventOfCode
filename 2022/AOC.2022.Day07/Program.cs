@@ -1,6 +1,5 @@
 ﻿using AdventOfCode;
 using AdventOfCode.Extensions;
-using System.Diagnostics;
 
 AdventDirectory root = await InputParser.Parse("input.txt");
 
@@ -9,5 +8,4 @@ int result = root.Dirs.Values.SelectRecursive(x => x.Dirs.Values)
     .Sum(x => x.Size);
 
 
-
-   Console.WriteLine(result); 
+Console.WriteLine(result);

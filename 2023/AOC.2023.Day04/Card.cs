@@ -35,9 +35,9 @@ public class Card
 
     public override string ToString()
     {
-        string formattedNumber = $"Card {Number,3}";
-        string formattedScore = $"Score: {CalculateScore(),3}";
-        string formattedCopyCount = $"CopyCount: {CopyCount,6}";
+        var formattedNumber = $"Card {Number,3}";
+        var formattedScore = $"Score: {CalculateScore(),3}";
+        var formattedCopyCount = $"CopyCount: {CopyCount,6}";
         string winningNumbers = string.Join(" ", WinningNumbers.Select(n => $"{n,2}"));
         string yourNumbers = string.Join(" ", YourNumbers.Select(n => $"{n,2}"));
 
@@ -47,7 +47,7 @@ public class Card
     public void UpdateCopyCount(Dictionary<int, Card> cards)
     {
         int matching = Overlapping.Count;
-        for (int i = 1; i <= matching; i++)
+        for (var i = 1; i <= matching; i++)
         {
             Card copiedCard = cards[Number + i];
             copiedCard.CopyCount += CopyCount;
