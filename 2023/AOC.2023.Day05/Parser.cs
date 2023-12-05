@@ -16,7 +16,7 @@ public class Parser
         string[] lines = File.ReadAllLines(_filename);
 
         var mode = "";
-        List<long> seedNumbers = new();
+        List<SeedPair> seedNumbers = new();
         Dictionary<string, List<DestinationSourceRange>> allMaps = new();
         foreach (string line in lines)
         {
@@ -26,7 +26,7 @@ public class Parser
         return new Almanac(seedNumbers, allMaps);
     }
 
-    private string ParseLine(string line, List<long> seedNumbers, string mode, Dictionary<string, List<DestinationSourceRange>> allMaps)
+    private string ParseLine(string line, List<SeedPair> seedNumbers, string mode, Dictionary<string, List<DestinationSourceRange>> allMaps)
     {
         if (string.IsNullOrEmpty(line))
         {
@@ -45,7 +45,7 @@ public class Parser
             return mode;
         }
 
-        long[] rangeNumbers = line.Split(" ", StringSplitOptions.TrimEntries).Select(long.Parse).ToArray();
+        ulong[] rangeNumbers = line.Split(" ", StringSplitOptions.TrimEntries).Select(ulong.Parse).ToArray();
 
         if (!allMaps.TryGetValue(mode, out List<DestinationSourceRange>? list))
         {
@@ -57,26 +57,22 @@ public class Parser
         return mode;
     }
 
-    private void ParseSeedNumbers(string line, List<long> seedNumbers)
+    private void ParseSeedNumbers(string line, List<SeedPair> seedNumbers)
     {
         string[] numbers = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-        long[] theNumbers = numbers.Skip(1).Select(long.Parse).ToArray();
+        ulong[] theNumbers = numbers.Skip(1).Select(ulong.Parse).ToArray();
         if (!_parseSeedsAsRange)
         {
-            seedNumbers.AddRange(theNumbers);
+            seedNumbers.AddRange(theNumbers.Select(start => new SeedPair(start, 0)));
         }
         else
         {
-            RangeLong(theNumbers[0], theNumbers[1], seedNumbers);
-            RangeLong(theNumbers[2], theNumbers[3], seedNumbers);
-        }
-    }
-
-    private static void RangeLong(long start, long count, List<long> seedNumbers)
-    {
-        for (long i = start; i < start + count; i++)
-        {
-            seedNumbers.Add(i);
+            for (int i = 0; i < theNumbers.Length; i++)
+            {
+                var pair = new SeedPair(theNumbers[i], theNumbers[i + 1]);
+                seedNumbers.Add(pair);
+                i++;
+            }
         }
     }
 }

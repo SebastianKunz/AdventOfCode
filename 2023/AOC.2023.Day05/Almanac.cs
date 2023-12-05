@@ -4,64 +4,141 @@ public class Almanac
 {
     private readonly Dictionary<string, List<DestinationSourceRange>> _allMaps;
 
-    public Almanac(List<long> seeds, Dictionary<string, List<DestinationSourceRange>> allMaps)
+    private readonly Dictionary<string, DestinationSourceRange?> _rangeCache = new();
+
+    public Almanac(List<SeedPair> seeds, Dictionary<string, List<DestinationSourceRange>> allMaps)
     {
+        foreach (List<DestinationSourceRange> val in allMaps.Values)
+        {
+            val.Sort((a, b) => a.SourceRangeStart.CompareTo(b.SourceRangeStart));
+        }
+
+        _rangeCache = new Dictionary<string, DestinationSourceRange?>();
+        _rangeCache.Add("seed-to-soil", null);
+        _rangeCache.Add("soil-to-fertilizer", null);
+        _rangeCache.Add("fertilizer-to-water", null);
+        _rangeCache.Add("water-to-light", null);
+        _rangeCache.Add("light-to-temperature", null);
+        _rangeCache.Add("temperature-to-humidity", null);
+        _rangeCache.Add("humidity-to-location", null);
+
         _allMaps = allMaps;
+
         Seeds = seeds;
     }
 
-    public IReadOnlyList<long> Seeds { get; }
+    private List<SeedPair> Seeds { get; }
 
-    public IReadOnlyList<DestinationSourceRange> SeedToSoil => _allMaps["seed-to-soil"];
-    public IReadOnlyList<DestinationSourceRange> SoilToFertilizer => _allMaps["soil-to-fertilizer"];
-    public IReadOnlyList<DestinationSourceRange> FertilizerToWater => _allMaps["fertilizer-to-water"];
-    public IReadOnlyList<DestinationSourceRange> WaterToLight => _allMaps["water-to-light"];
-    public IReadOnlyList<DestinationSourceRange> LightToTemperature => _allMaps["light-to-temperature"];
-    public IReadOnlyList<DestinationSourceRange> TemperatureToHumidity => _allMaps["temperature-to-humidity"];
-    public IReadOnlyList<DestinationSourceRange> HumidityToLocation => _allMaps["humidity-to-location"];
+    private List<DestinationSourceRange> SeedToSoil => _allMaps["seed-to-soil"];
+    private List<DestinationSourceRange> SoilToFertilizer => _allMaps["soil-to-fertilizer"];
+    private List<DestinationSourceRange> FertilizerToWater => _allMaps["fertilizer-to-water"];
+    private List<DestinationSourceRange> WaterToLight => _allMaps["water-to-light"];
+    private List<DestinationSourceRange> LightToTemperature => _allMaps["light-to-temperature"];
+    private List<DestinationSourceRange> TemperatureToHumidity => _allMaps["temperature-to-humidity"];
+    private List<DestinationSourceRange> HumidityToLocation => _allMaps["humidity-to-location"];
 
-    public long FindSource(long number, IReadOnlyList<DestinationSourceRange> map)
+    public ulong FindSource(ulong number, string mode, List<DestinationSourceRange> map)
     {
-        foreach (DestinationSourceRange range in map)
+        var rangeHint = _rangeCache[mode];
+        var cachedRange = CalcDestination(number, rangeHint);
+        if (cachedRange.HasValue)
         {
-            if (number >= range.SourceRangeStart && number <= range.SourceRangeStart + range.RangeLength - 1)
-            {
-                return range.DestinationRangeStart + number - range.SourceRangeStart;
-            }
+            return cachedRange.Value;
+        }
+
+        DestinationSourceRange? range = FindClosestRange(number, map);
+        _rangeCache[mode] = range;
+
+        cachedRange = CalcDestination(number, range);
+
+        if (cachedRange.HasValue)
+        {
+            return cachedRange.Value;
         }
 
         return number;
     }
 
-    public long CalculateLocationFor(long seedNumber)
+    private static ulong? CalcDestination(ulong number, DestinationSourceRange? range)
     {
-        long soilNumber = FindSource(seedNumber, SeedToSoil);
-        long fertilizerNumber = FindSource(soilNumber, SoilToFertilizer);
-        long waterNumber = FindSource(fertilizerNumber, FertilizerToWater);
-        long lightNumber = FindSource(waterNumber, WaterToLight);
-        long tempNumber = FindSource(lightNumber, LightToTemperature);
-        long humidityNumber = FindSource(tempNumber, TemperatureToHumidity);
-        long locationNumber = FindSource(humidityNumber, HumidityToLocation);
+        if (range is not null && number >= range.SourceRangeStart && number <= range.SourceRangeStart + range.RangeLength - 1)
+        {
+            return range.DestinationRangeStart + number - range.SourceRangeStart;
+        }
+
+        return null;
+    }
+
+    private static DestinationSourceRange? FindClosestRange(ulong number, List<DestinationSourceRange> map)
+    {
+        int left = 0;
+        int right = map.Count - 1;
+        int mid;
+        int resultIndex = -1;
+
+        if (number < map[0].SourceRangeStart || number > map[^1].EndOfSourceRange)
+        {
+            return null;
+        }
+
+        while (left <= right)
+        {
+            mid = left + (right - left) / 2;
+            var range = map[mid];
+
+            if (number < range.SourceRangeStart)
+            {
+                right = mid - 1;
+            }
+            else
+            {
+                left = mid + 1;
+                resultIndex = mid;
+            }
+        }
+
+        if (resultIndex == -1)
+            return null;
+
+        return map[resultIndex];
+    }
+
+    public ulong CalculateLocationFor(ulong seedNumber)
+    {
+        ulong soilNumber = FindSource(seedNumber, "seed-to-soil", SeedToSoil);
+        ulong fertilizerNumber = FindSource(soilNumber,"soil-to-fertilizer", SoilToFertilizer);
+        ulong waterNumber = FindSource(fertilizerNumber,"fertilizer-to-water", FertilizerToWater);
+        ulong lightNumber = FindSource(waterNumber,"water-to-light", WaterToLight);
+        ulong tempNumber = FindSource(lightNumber,"light-to-temperature", LightToTemperature);
+        ulong humidityNumber = FindSource(tempNumber,"temperature-to-humidity", TemperatureToHumidity);
+        ulong locationNumber = FindSource(humidityNumber, "humidity-to-location", HumidityToLocation);
         return locationNumber;
     }
 
-    public long FindLowestLocationNumber()
+    public ulong FindLowestLocationNumber()
     {
-        Console.WriteLine($"We have to solve {Seeds.Count} seeds.");
-        var min = long.MaxValue;
+        long seedCount = Seeds.Sum(x => (long)x.Range);
+        Console.WriteLine($"We have to solve {seedCount:n0} seeds.");
+        var min = ulong.MaxValue;
+        long count = 0;
         for (var index = 0; index < Seeds.Count; index++)
         {
-            long seedNumber = Seeds[index];
-            long location = CalculateLocationFor(seedNumber);
-            if (location < min)
+            var seedPair = Seeds[index];
+            for (ulong seedNumber = seedPair.Start; seedNumber < seedPair.Count; seedNumber++)
             {
-                min = location;
-            }
+                ulong location = CalculateLocationFor(seedNumber);
+                if (location < min)
+                {
+                    min = location;
+                }
 
-            if (index % (Seeds.Count / 100) == 0)
-            {
-                var percent = (index / (double)Seeds.Count).ToString("0.00%");
-                Console.WriteLine($"Solved {index:n0} / {Seeds.Count:n0} ({percent})");
+                if (count % (seedCount / 100) == 0)
+                {
+                    var percent = (count / (double)seedCount).ToString("0.00%");
+                    Console.WriteLine($"Solved {count:n0} / {seedCount:n0} ({percent})");
+                }
+
+                count++;
             }
         }
 

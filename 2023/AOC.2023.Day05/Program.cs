@@ -10,8 +10,8 @@ sw.Stop();
 Console.WriteLine($"Parsing took {sw.ElapsedMilliseconds}ms");
 sw.Restart();
 
-long result = almanac.FindLowestLocationNumber();
+ulong result = almanac.FindLowestLocationNumber();
 
 sw.Stop();
-Console.WriteLine($"Solving took in {sw.ElapsedMilliseconds}ms ({sw.ElapsedMilliseconds / 1000.0:0:0.##}s)");
+Console.WriteLine($"Solving took in {sw.ElapsedMilliseconds}ms ({sw.ElapsedMilliseconds / 1000.0}s)");
 Console.WriteLine($"Result For Part 1: {result}");

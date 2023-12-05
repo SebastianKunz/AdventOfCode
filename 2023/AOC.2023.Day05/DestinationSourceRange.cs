@@ -2,14 +2,19 @@
 
 public class DestinationSourceRange
 {
-    public DestinationSourceRange(long destinationRangeStart, long sourceRangeStart, long rangeLength)
+    public DestinationSourceRange(ulong destinationRangeStart, ulong sourceRangeStart, ulong rangeLength)
     {
         DestinationRangeStart = destinationRangeStart;
         SourceRangeStart = sourceRangeStart;
         RangeLength = rangeLength;
+        EndOfSourceRange = SourceRangeStart + rangeLength - 1;
+        EndOfDestinationRange = DestinationRangeStart + rangeLength - 1;
     }
 
-    public long DestinationRangeStart { get; }
-    public long SourceRangeStart { get; }
-    public long RangeLength { get; }
+    public ulong DestinationRangeStart { get; }
+    public ulong SourceRangeStart { get; }
+    public ulong RangeLength { get; }
+    
+    public ulong EndOfSourceRange { get; }
+    public ulong EndOfDestinationRange { get; }
 }
