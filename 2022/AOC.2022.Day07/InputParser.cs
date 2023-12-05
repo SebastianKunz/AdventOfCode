@@ -54,9 +54,14 @@ public static class InputParser
     private static CommandType ParseCommandType(string type)
     {
         if (type == "cd")
+        {
             return CommandType.Cd;
+        }
+
         if (type == "ls")
+        {
             return CommandType.Ls;
+        }
 
         throw new ArgumentOutOfRangeException(type);
     }
@@ -64,11 +69,19 @@ public static class InputParser
     private static LineType ParseLineType(string type)
     {
         if (type == "$")
+        {
             return LineType.Command;
+        }
+
         if (type == "dir")
+        {
             return LineType.Dir;
+        }
+
         if (int.TryParse(type, out _))
+        {
             return LineType.File;
+        }
 
         throw new ArgumentOutOfRangeException(type);
     }

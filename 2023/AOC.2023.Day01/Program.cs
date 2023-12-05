@@ -16,7 +16,10 @@ var lookUp = new Dictionary<string, int>
 
 int ConvertStrToInt(string str)
 {
-    if (int.TryParse(str, out int number)) return number;
+    if (int.TryParse(str, out int number))
+    {
+        return number;
+    }
 
     return lookUp[str];
 }
@@ -26,7 +29,10 @@ string[] lines = await File.ReadAllLinesAsync("input.txt");
 
 Regex regex;
 if (isPart1)
+{
     regex = new Regex("[0-9]");
+}
+
 regex = new Regex("(?=([0-9]|one|two|three|four|five|six|seven|eight|nine))");
 
 List<string> MatchForPart2(MatchCollection matchCollection)
@@ -35,11 +41,13 @@ List<string> MatchForPart2(MatchCollection matchCollection)
 
     foreach (Match match in matchCollection)
         // Using match.Index + 1 because the lookahead matches the position before the word/digit
+    {
         if (match.Groups.Count == 2)
         {
             string wordOrDigit = match.Groups[1].Value;
             results.Add(wordOrDigit);
         }
+    }
 
     return results;
 }
@@ -66,7 +74,10 @@ for (var index = 0; index < list.Count; index++)
 int resultSum = list.Sum(l =>
 {
     if (l.Count == 0)
+    {
         return 0;
+    }
+
     if (l.Count == 1)
     {
         int number = ConvertStrToInt(l.First());

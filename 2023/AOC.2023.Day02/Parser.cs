@@ -39,7 +39,10 @@ public class Parser
     {
         // ["3 blue, 4 red", "1 red, 2 green, 6 blue, "2 green"]
         string[] turnSplits = turnString.Split(";");
-        foreach (string turnStr in turnSplits) ParseSingleTurn(turnStr, game);
+        foreach (string turnStr in turnSplits)
+        {
+            ParseSingleTurn(turnStr, game);
+        }
     }
 
     private static void ParseSingleTurn(string turnStr, Game game)
@@ -47,7 +50,10 @@ public class Parser
         // "3 blue, 4 red" -> ["3 blue", "4 red"]
         string[] revealedCubes = turnStr.Split(",", StringSplitOptions.TrimEntries);
         var gameSet = new GameSet();
-        foreach (string revealedCube in revealedCubes) ParseRevealedCube(revealedCube, gameSet);
+        foreach (string revealedCube in revealedCubes)
+        {
+            ParseRevealedCube(revealedCube, gameSet);
+        }
 
         game.GameSets.Add(gameSet);
     }

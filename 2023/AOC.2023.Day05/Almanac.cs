@@ -23,8 +23,12 @@ public class Almanac
     public long FindSource(long number, IReadOnlyList<DestinationSourceRange> map)
     {
         foreach (DestinationSourceRange range in map)
+        {
             if (number >= range.SourceRangeStart && number <= range.SourceRangeStart + range.RangeLength - 1)
+            {
                 return range.DestinationRangeStart + number - range.SourceRangeStart;
+            }
+        }
 
         return number;
     }
@@ -50,7 +54,10 @@ public class Almanac
             long seedNumber = Seeds[index];
             long location = CalculateLocationFor(seedNumber);
             if (location < min)
+            {
                 min = location;
+            }
+
             if (index % (Seeds.Count / 100) == 0)
             {
                 var percent = (index / (double)Seeds.Count).ToString("0.00%");

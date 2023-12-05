@@ -13,5 +13,5 @@ sw.Restart();
 long result = almanac.FindLowestLocationNumber();
 
 sw.Stop();
-Console.WriteLine($"Solving took in {sw.ElapsedMilliseconds}ms");
+Console.WriteLine($"Solving took in {sw.ElapsedMilliseconds}ms ({sw.ElapsedMilliseconds / 1000.0:0:0.##}s)");
 Console.WriteLine($"Result For Part 1: {result}");

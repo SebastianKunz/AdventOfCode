@@ -10,7 +10,9 @@ public static class EnumerableExtensions
 
             IEnumerable<T> children = selector(parent);
             foreach (T child in SelectRecursive(children, selector))
+            {
                 yield return child;
+            }
         }
     }
 }

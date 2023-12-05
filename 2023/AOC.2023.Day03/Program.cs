@@ -10,7 +10,10 @@ for (var i = 0; i < schematic.RawSchematic.Length; i++)
 {
     List<SchematicSymbol> symbols = schematic.SchematicSymbols.Where(x => x.PosY == i).ToList();
     if (symbols.Count == 0)
+    {
         continue;
+    }
+
     Console.WriteLine($"Current idx: {i}");
     foreach (SchematicSymbol symbol in symbols)
     {

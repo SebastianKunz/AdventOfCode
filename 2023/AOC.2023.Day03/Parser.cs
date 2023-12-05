@@ -43,7 +43,10 @@ public class Parser
         {
             char c = line[x];
             if (c == '.')
+            {
                 continue;
+            }
+
             if (char.IsDigit(c))
             {
                 x = ParseSchematicNumber(x, line, y, schematic);
@@ -59,7 +62,10 @@ public class Parser
     private static int ParseSchematicNumber(int x, string line, int y, EngineSchematic schematic)
     {
         int startIdx = x;
-        while (x < line.Length && char.IsDigit(line[x])) x++;
+        while (x < line.Length && char.IsDigit(line[x]))
+        {
+            x++;
+        }
 
         string numberStr = line.Substring(startIdx, x - startIdx);
         int number = int.Parse(numberStr);

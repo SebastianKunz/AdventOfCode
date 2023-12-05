@@ -28,7 +28,9 @@ public class Card
     public int CalculateScore()
     {
         if (Overlapping.Count <= 1)
+        {
             return Overlapping.Count;
+        }
 
         return (int)Math.Pow(2, Overlapping.Count - 1);
     }

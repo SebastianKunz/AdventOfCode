@@ -50,18 +50,32 @@ foreach (string line in lines)
     else if (expectedResult == GameResult.Win)
     {
         if (opponent == PlayType.Paper)
+        {
             whatINeedToPlay = PlayType.Scissors;
+        }
         else if (opponent == PlayType.Rock)
+        {
             whatINeedToPlay = PlayType.Paper;
-        else if (opponent == PlayType.Scissors) whatINeedToPlay = PlayType.Rock;
+        }
+        else if (opponent == PlayType.Scissors)
+        {
+            whatINeedToPlay = PlayType.Rock;
+        }
     }
     else
     {
         if (opponent == PlayType.Paper)
+        {
             whatINeedToPlay = PlayType.Rock;
+        }
         else if (opponent == PlayType.Rock)
+        {
             whatINeedToPlay = PlayType.Scissors;
-        else if (opponent == PlayType.Scissors) whatINeedToPlay = PlayType.Paper;
+        }
+        else if (opponent == PlayType.Scissors)
+        {
+            whatINeedToPlay = PlayType.Paper;
+        }
     }
 
     totalScore += CalcScore(whatINeedToPlay, opponent);
@@ -75,8 +89,13 @@ int CalcScore(PlayType me, PlayType opponent)
     if ((me == PlayType.Rock && opponent == PlayType.Scissors) ||
         (me == PlayType.Paper && opponent == PlayType.Rock) ||
         (me == PlayType.Scissors && opponent == PlayType.Paper))
+    {
         score += 6;
-    else if (me == opponent) score += 3;
+    }
+    else if (me == opponent)
+    {
+        score += 3;
+    }
 
     return score;
 }
